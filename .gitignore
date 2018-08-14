@@ -11,5 +11,17 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 
+# Intellij files
 *.iml
 *.idea
+
+# CMake files
+build/
+cmake-build-*
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+
+# Generated files
+*.png
