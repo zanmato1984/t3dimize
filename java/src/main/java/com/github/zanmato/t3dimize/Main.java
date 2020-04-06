@@ -15,10 +15,10 @@ import static java.lang.Math.PI;
 import static java.lang.Math.sqrt;
 
 public class Main {
-  final static double IMAGE_SIZE = 500.0;
+  final static double IMAGE_SIZE = 600.0;
 
-  final static double CUBE_LENGTH = 100.0;
-  final static double LETTER_WEIGHT = 25.0;
+  final static double CUBE_LENGTH = 99.0;
+  final static double LETTER_WEIGHT = 33.0;
 
   final static Color bkgColor = Color.RED;
   final static Color fgColor = Color.WHITE;
