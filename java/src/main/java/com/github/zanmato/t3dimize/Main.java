@@ -17,8 +17,8 @@ import static java.lang.Math.sqrt;
 public class Main {
   final static double IMAGE_SIZE = 600.0;
 
-  final static double CUBE_LENGTH = 99.0;
-  final static double LETTER_WEIGHT = 33.0;
+  final static double CUBE_LENGTH = 36.0;
+  final static double LETTER_WEIGHT = 12.0;
 
   final static Color bkgColor = Color.RED;
   final static Color fgColor = Color.WHITE;
@@ -26,6 +26,7 @@ public class Main {
   final static String topFaceFile = "./top-face.png";
   final static String leftFaceFile = "./left-face.png";
   final static String rightFaceFile = "./right-face.png";
+  final static String blenderUVFile = "./uv.png";
 
   public static void main(String[] args) throws IOException {
     TopFace topFace = new TopFace();
@@ -42,6 +43,10 @@ public class Main {
     rightFace.drawImage();
     rightFace.saveImage();
     rightFace.showTransformedImage();
+
+    BlenderUV blenderUV = new BlenderUV(topFace.image, leftFace.image, rightFace.image);
+    blenderUV.drawImage();
+    blenderUV.saveImage();
   }
 
   static class TopFace extends JPanel {
@@ -254,6 +259,59 @@ public class Main {
 
       graphics.setTransform(transform);
       g.drawImage(image, 0, 0, null);
+    }
+  }
+
+  static class BlenderUV {
+    BlenderUV(BufferedImage top, BufferedImage left, BufferedImage right) {
+      this.top = top;
+      this.left = left;
+      this.right = right;
+    }
+
+    BufferedImage top, left, right;
+
+    BufferedImage image = new BufferedImage((int) IMAGE_SIZE * 4, (int) IMAGE_SIZE * 4, BufferedImage.TYPE_INT_RGB);
+
+    public void drawImage() {
+      Graphics2D graphics = image.createGraphics();
+      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      graphics.setColor(Color.RED);
+      graphics.fillRect(0, 0, (int) IMAGE_SIZE * 4, (int) IMAGE_SIZE * 4);
+      graphics.setColor(fgColor);
+
+      graphics.rotate(PI / 2.0, IMAGE_SIZE * 2, IMAGE_SIZE * 2);
+
+      AffineTransform transformTop = new AffineTransform();
+      transformTop.translate(IMAGE_SIZE, IMAGE_SIZE / 2.0);
+      transformTop.rotate(PI / 2.0, IMAGE_SIZE / 2.0, IMAGE_SIZE / 2.0);
+      graphics.drawRenderedImage(top, transformTop);
+
+      AffineTransform transformBottom = new AffineTransform();
+      transformBottom.translate(IMAGE_SIZE, IMAGE_SIZE * 2.5);
+      graphics.drawRenderedImage(top, transformBottom);
+
+      AffineTransform transformLeft = new AffineTransform();
+      transformLeft.translate(0.0, IMAGE_SIZE * 1.5);
+      graphics.drawRenderedImage(left, transformLeft);
+
+      AffineTransform transformRight = new AffineTransform();
+      transformRight.translate(IMAGE_SIZE * 1.0, IMAGE_SIZE * 1.5);
+      graphics.drawRenderedImage(right, transformRight);
+
+      AffineTransform transformRightBack = new AffineTransform();
+      transformRightBack.translate(IMAGE_SIZE * 2.0, IMAGE_SIZE * 1.5);
+      transformRightBack.rotate(PI, IMAGE_SIZE / 2.0, IMAGE_SIZE / 2.0);
+      graphics.drawRenderedImage(right, transformRightBack);
+
+      AffineTransform transformLeftBack = new AffineTransform();
+      transformLeftBack.translate(IMAGE_SIZE * 3.0, IMAGE_SIZE * 1.5);
+      transformLeftBack.rotate(PI, IMAGE_SIZE / 2.0, IMAGE_SIZE / 2.0);
+      graphics.drawRenderedImage(left, transformLeftBack);
+    }
+
+    public void saveImage() throws IOException {
+      ImageIO.write(image, "PNG", new File(blenderUVFile));
     }
   }
 }
